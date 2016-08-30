@@ -39,33 +39,33 @@ storage.add('Peppers');
 var app = express();
 app.use(express.static('public'));
 
-app.get('/items', function(request, response) {
-    response.json(storage.items);
+app.get('/items', function(req, res) {
+    res.json(storage.items);
 });
 
-app.post('/items', jsonParser, function(request, response) {
-    if (!request.body) {
-        return response.sendStatus(400);
+app.post('/items', jsonParser, function(req, res) {
+    if (!req.body) {
+        return res.sendStatus(400);
     }
 
-    var item = storage.add(request.body.name);
-    response.status(201).json(item);
+    var item = storage.add(req.body.name);
+    res.status(201).json(item);
 });
 
-app.put('/items/:id', jsonParser, function(request, ressponse) {
-  if (!request.body) {
-    return response.sendStatus(400);
+app.put('/items/:id', jsonParser, function(req, res) {
+  if (!req.body) {
+    return res.sendStatus(400);
   }
-  var item = storage.put(request.params.id, request.body.name);
-  response.status(201).json(item);
+  var item = storage.put(req.params.id, req.body.name);
+  res.status(201).json(item);
 });
 
-app.delete('/items/:id', function(request, response) {
-    var item = storage.remove(request.params.id);
+app.delete('/items/:id', function(req, res) {
+    var item = storage.remove(req.params.id);
     if (item) {
-        response.status(201).json(item);
+        res.status(201).json(item);
     } else {
-        response.status(400).json({
+        res.status(400).json({
             "error": "no item found"
         });
     }
@@ -75,3 +75,6 @@ app.listen(process.env.PORT || 3000, function() {
     var currentPort = process.env.PORT;
     console.log('Server Started!');
 });
+
+exports.app = app;
+exports.storage = storage;
